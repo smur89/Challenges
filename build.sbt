@@ -26,6 +26,16 @@ lazy val password = project
     libraryDependencies ++= commonDependencies
   )
 
+lazy val smallestnumberequallength = project
+  .settings(settings,
+    libraryDependencies ++= commonDependencies
+  )
+
+lazy val squareroots = project
+  .settings(settings,
+    libraryDependencies ++= commonDependencies
+  )
+
 
 
 lazy val settings = Seq(
