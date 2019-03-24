@@ -16,6 +16,18 @@ lazy val elevator = project
   )
 
 
+lazy val decimalzip = project
+  .settings(settings,
+    libraryDependencies ++= commonDependencies
+  )
+
+lazy val password = project
+  .settings(settings,
+    libraryDependencies ++= commonDependencies
+  )
+
+
+
 lazy val settings = Seq(
   scalacOptions ++= Seq(
     "-unchecked",
