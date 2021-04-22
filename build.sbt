@@ -2,7 +2,7 @@ name := "Challenges"
 
 version := "0.1"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.5"
 
 lazy val global = project
   .in(file("."))
@@ -35,8 +35,19 @@ lazy val squareroots = project
   .settings(settings,
     libraryDependencies ++= commonDependencies
   )
-
-
+  
+lazy val arbitrage = project
+  .settings(settings,
+    libraryDependencies ++= commonDependencies ++
+      Seq(
+      "org.http4s" %% "http4s-dsl" % "0.21.21",
+      "org.http4s" %% "http4s-circe" % "0.21.21",
+      "org.http4s" %% "http4s-blaze-client" % "0.21.21",
+      "org.typelevel" %% "squants" % "1.7.4",
+      "com.github.valskalla" %% "odin-core" % "0.11.0",
+      "io.estatico" %% "newtype" % "0.4.4"
+    )
+  )
 
 lazy val settings = Seq(
   scalacOptions ++= Seq(
