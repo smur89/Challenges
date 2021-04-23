@@ -31,12 +31,11 @@ class SolutionTest extends WordSpec with Matchers {
     Solution.solution(Integer.MAX_VALUE) shouldBe 1000000000
   }
 
-
   "Min" in {
     Solution.solution(Integer.MIN_VALUE) shouldBe -1000000000
   }
 
   "billion" in {
-    Solution.solution(10^9) shouldBe 0
+    Solution.solution(10 ^ 9) shouldBe 0
   }
 }

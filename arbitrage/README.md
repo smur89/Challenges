@@ -49,4 +49,3 @@ Given these exchange rates and the promise of riches, write a program (in any la
 Email your program, as well as a sample run where it makes a profit, to brendan@priceonomics.com.
 
 In addition, please share a little about your background and interests, the position you're interested in, and what excites you about Priceonomics in your message.
-

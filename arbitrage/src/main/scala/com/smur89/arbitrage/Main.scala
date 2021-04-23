@@ -1,3 +1,5 @@
+package com.smur89
+
 import io.odin.formatter.Formatter
 import io.odin.loggers.ConsoleLogger
 import io.odin.{Level, Logger}
@@ -36,14 +38,13 @@ object ExchangeRate {
 
   def decode(responseMap: Map[String, Double]): IO[List[ExchangeRate[Currency]]] =
     responseMap
-      .map {
-        case (k, v) =>
-          k.split("_").toList match {
-            case from :: to :: Nil =>
-              IO.fromTry((Currency(from), Currency(to)).mapN { (fromCurrency, toCurrency) =>
-                ExchangeRate(From(fromCurrency), To(toCurrency), v)
-              })
-          }
+      .map { case (k, v) =>
+        k.split("_").toList match {
+          case from :: to :: Nil =>
+            IO.fromTry((Currency(from), Currency(to)).mapN { (fromCurrency, toCurrency) =>
+              ExchangeRate(From(fromCurrency), To(toCurrency), v)
+            })
+        }
       }
       .toList
       .sequence
@@ -55,8 +56,8 @@ object Graph {
   type Graph[A] = Map[A, List[Edge[A]]]
 
   def apply[A](rates: List[ExchangeRate[A]]): Graph[A] =
-    rates.groupBy(_.from).map {
-      case (from, edges) => from.coerce -> edges.map(edge => Edge[A](from, edge.to, -Math.log10(edge.rate)))
+    rates.groupBy(_.from).map { case (from, edges) =>
+      from.coerce -> edges.map(edge => Edge[A](from, edge.to, -Math.log10(edge.rate)))
     }
 
   def relaxGraph[A](source: A, graph: Graph[A]): (Map[A, Double], Map[From[A], To[A]]) = {
@@ -68,8 +69,7 @@ object Graph {
     relaxEdges(iterations, allEdges, allVertices.updated(source, 0d), Map.empty[From[A], To[A]])
   }
 
-  /**
-    * Check one more iteration, if a negative sum cycle is present, it will have changed the distance weight
+  /** Check one more iteration, if a negative sum cycle is present, it will have changed the distance weight
     */
   def hasNegativeSumCycle[A](source: A, graph: Graph[A], distance: Map[A, Double]): Boolean = {
     val allEdges = graph.values.flatten.toList
@@ -89,8 +89,8 @@ object Graph {
     iterations match {
       case 0 => (distance, predecessor)
       case _ =>
-        val (dist, pre) = edges.foldLeft((distance, predecessor)) {
-          case ((accDistance, accPredecessor), edge) => relax(edge, accDistance, accPredecessor)
+        val (dist, pre) = edges.foldLeft((distance, predecessor)) { case ((accDistance, accPredecessor), edge) =>
+          relax(edge, accDistance, accPredecessor)
         }
         relaxEdges(iterations - 1, edges, dist, pre)
     }
@@ -139,20 +139,6 @@ object Main extends App {
   val logger: Logger[IO] = ConsoleLogger[IO](Formatter.colorful, Level.Info)
   val httpClientResource: Resource[IO, Client[IO]] = BlazeClientBuilder[IO](global).resource
 
-//  val responseMap = Map[String, Double](
-//    "USD_EUR" -> 0.7779,
-//    "USD_JPY" -> 102.4590,
-//    "USD_BTC" -> 0.0083,
-//    "EUR_USD" -> 1.2851,
-//    "EUR_JPY" -> 131.7110,
-//    "EUR_BTC" -> 0.01125,
-//    "JPY_USD" -> 0.0098,
-//    "JPY_EUR" -> 0.0075,
-//    "JPY_BTC" -> 0.0000811,
-//    "BTC_USD" -> 115.65,
-//    "BTC_EUR" -> 88.8499,
-//    "BTC_JPY" -> 12325.44
-//  )
   def run: IO[_] =
     logger.info("Starting...") *>
       httpClientResource

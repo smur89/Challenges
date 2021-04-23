@@ -2,13 +2,12 @@ package com.smur89.password
 
 object Solution {
   def solution(s: String): Int = {
-    def findPossiblePasswords(password: String,
-                              longestPasswordSize: Int): Int = {
+    def findPossiblePasswords(password: String, longestPasswordSize: Int): Int = {
       val (possiblePassword, tail) = password.span(isValidPasswordChar)
 
       (possiblePassword, tail) match {
         case (p, t) if t.isEmpty => sizeIfValid(p).max(longestPasswordSize)
-        case (p, t) => findPossiblePasswords(t.tail, sizeIfValid(p).max(longestPasswordSize))
+        case (p, t)              => findPossiblePasswords(t.tail, sizeIfValid(p).max(longestPasswordSize))
       }
     }
 
